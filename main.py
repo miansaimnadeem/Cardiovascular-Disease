@@ -51,3 +51,64 @@ print(df.info())
 
 print("\nDescriptive Statistics after feature engineering and cleaning:")
 print(df.describe())
+
+# Univariate Analysis
+numerical_cols = ['age_years', 'height', 'weight', 'bmi', 'ap_hi', 'ap_lo', 'map']
+
+plt.figure(figsize=(15, 10))
+for i, col in enumerate(numerical_cols):
+    plt.subplot(3, 3, i + 1)
+    sns.histplot(df[col], kde=True)
+    plt.title(f'Distribution of {col}')
+    plt.xlabel(col)
+    plt.ylabel('Frequency')
+plt.tight_layout()
+plt.savefig('numerical_features_histograms.png')
+plt.show()
+
+# Univariate Analysis 
+categorical_cols = ['gender', 'cholesterol', 'gluc', 'smoke', 'alco', 'active', 'cardio']
+
+plt.figure(figsize=(15, 10))
+for i, col in enumerate(categorical_cols):
+    plt.subplot(3, 3, i + 1)
+    sns.countplot(x=col, data=df)
+    plt.title(f'Count of {col}')
+    plt.xlabel(col)
+    plt.ylabel('Count')
+plt.tight_layout()
+plt.savefig('categorical_features_countplots.png')
+plt.show()
+
+# Bivariate Analysis 
+plt.figure(figsize=(10, 8))
+correlation_matrix = df[numerical_cols + ['cardio']].corr()
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Correlation Matrix of Numerical Features with Cardio')
+plt.savefig('correlation_matrix.png')
+plt.show()
+
+# Bivariate Analysis 
+plt.figure(figsize=(15, 12))
+for i, col in enumerate(numerical_cols):
+    plt.subplot(3, 3, i + 1)
+    sns.boxplot(x='cardio', y=col, data=df)
+    plt.title(f'{col} vs. Cardio')
+    plt.xlabel('Cardio (0: No, 1: Yes)')
+    plt.ylabel(col)
+plt.tight_layout()
+plt.savefig('numerical_features_vs_cardio_boxplots.png')
+plt.show()
+
+plt.figure(figsize=(15, 12))
+for i, col in enumerate(categorical_cols):
+    if col != 'cardio': 
+        plt.subplot(3, 3, i + 1)
+        sns.countplot(x=col, hue='cardio', data=df, palette='viridis')
+        plt.title(f'{col} vs. Cardio')
+        plt.xlabel(col)
+        plt.ylabel('Count')
+        plt.legend(title='Cardio')
+plt.tight_layout()
+plt.savefig('categorical_features_vs_cardio_countplots.png')
+plt.show()
